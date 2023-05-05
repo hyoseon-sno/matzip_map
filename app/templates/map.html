@@ -1,0 +1,384 @@
+{% extends 'home.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="shortcut icon" href="/static/icon1.png">
+<meta charset="utf-8">
+<style>
+  iframe {width: 100%;height: 10000000px;border: none;}
+  button {border:none; background: #fff;}
+  html, body {width:100%;height:100%;margin:0;padding:0;background-color:#9799dd;} 
+  .map_wrap, .map_wrap * {margin:0;padding:0;font-size:12px;}
+  .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+  .map_wrap {position:relative;width:100%;height:85%;}
+  #menu_wrap {position:absolute;top:80px;left:0;bottom:0;width:300px; margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+  .bg_white {background:#ffffff;}
+  #menu_wrap .option{text-align: center;}
+  #menu_wrap .option p {margin:10px 0;}  
+  #menu_wrap .option button {margin-left:5px;}
+
+
+.radius_border{border:1px solid #919191;border-radius:5px;box-sizing: content-box;}     
+.custom_typecontrol {position:absolute;top:10px;left:10px;overflow:hidden;width:130px;height:30px;margin:0;padding:0;z-index:1;font-size:12px;font-family:'Malgun Gothic', '맑은 고딕', sans-serif;}
+.custom_typecontrol span {display:block;width:65px;height:30px;float:left;text-align:center;line-height:30px;cursor:pointer;}
+.custom_typecontrol .btn {background:#fff;background:linear-gradient(#fff,  #e6e6e6);}       
+.custom_typecontrol .btn:hover {background:#f5f5f5;background:linear-gradient(#f5f5f5,#e3e3e3);}
+.custom_typecontrol .btn:active {background:#e6e6e6;background:linear-gradient(#e6e6e6, #fff);}    
+.custom_typecontrol .selected_btn {color:#fff;background:#425470;background:linear-gradient(#425470, #5b6d8a);}
+.custom_typecontrol .selected_btn:hover {color:#fff;}   
+.custom_zoomcontrol {position:absolute;top:50px;right:10px;width:36px;height:80px;overflow:hidden;z-index:1;background-color:#f5f5f5;} 
+.custom_zoomcontrol span {box-sizing: content-box !important; display:block;width:36px;height:40px;text-align:center;cursor:pointer;-webkit-box-sizing:content-box}
+.custom_zoomcontrol span img {width:15px;height:15px;padding:12px 0;border:none; box-sizing:content-box;}             
+.custom_zoomcontrol span:first-child{border-bottom:1px solid #bfbfbf;}
+
+#category {position:absolute;top:50px;left:10px;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2;}
+#category li {float:left;list-style: none;width:50px;px;border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer;}
+
+#pagination {margin:10px auto;text-align: center;}
+#pagination a {display:inline-block;margin-right:10px;}
+#pagination .on {font-weight: bold; cursor: default;color:#777;}
+
+.placeinfo_wrap {position:absolute;bottom:28px;left:-150px;width:300px;}
+.placeinfo {position:relative;width:100%;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;padding-bottom: 10px;background: #fff;}
+.placeinfo:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}
+.placeinfo_wrap .after {content:'';position:relative;margin-left:-12px;left:50%;width:22px;height:12px;background:url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')}
+.placeinfo a, .placeinfo a:hover, .placeinfo a:active{color:#fff;text-decoration: none;}
+.placeinfo a, .placeinfo span {display: block;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+.placeinfo span {margin:5px 5px 0 5px;cursor: default;font-size:13px;}
+.placeinfo .title {font-weight: bold; font-size:14px;border-radius: 6px 6px 0 0;margin: -1px -1px 0 -1px;padding:10px; color: #fff;background: #d95050;background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;}
+.placeinfo .tel {color:#0f7833;}
+.placeinfo .jibun {color:#999;font-size:11px;margin-top:0;}
+
+
+</style>
+</head>
+<body>
+    <div class="map_wrap">
+       <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+       <div class="custom_typecontrol radius_border">
+           <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
+           <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+       </div>
+       <div class="custom_zoomcontrol radius_border"> 
+           <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png" alt="확대"></span>  
+           <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png" alt="축소"></span>
+       </div>
+       <ul id="category">
+           <li id="한식" data-order="0">한식</li>      
+           <li id="중식" data-order="1">중식</li>  
+           <li id="일식" data-order="2">일식</li>  
+           <li id="양식" data-order="3">양식</li>  
+           <li id="분식" data-order="4">분식</li>  
+           <li id="카페" data-order="5">카페</li>           
+         </ul>
+   
+         <style>
+           #category, #category li {
+             user-select: none;
+           }
+         </style>
+         
+         <div id="menu_wrap" class="bg_white">
+           <div id="websites-container"></div>
+           <iframe id="iframe"></iframe>
+       
+         
+           <script>
+             const category = document.getElementById('category');
+   const iframe = document.getElementById('iframe');
+   let selectedCategory = null;
+   
+   category.addEventListener('click', (event) => {
+     const clickedCategory = event.target.id;
+   
+     if (selectedCategory === clickedCategory) {
+       event.target.style.backgroundColor = 'white';
+       event.target.style.color = 'black';
+       selectedCategory = null;
+       iframe.style.display = 'none'; // 선택된 항목이 해제될 때 iframe 숨기기
+     } else {
+       const liTags = category.getElementsByTagName('li');
+   
+       for (let i = 0; i < liTags.length; i++) {
+         if (liTags[i].id === clickedCategory) {
+           liTags[i].style.backgroundColor = '#425470';
+           liTags[i].style.color = 'white';
+         } else {
+           liTags[i].style.backgroundColor = 'white';
+           liTags[i].style.color = 'black';
+         }
+       }
+       selectedCategory = clickedCategory;
+       iframe.style.display = 'block'; // 새로운 항목이 선택될 때 iframe 보이기
+   
+       if (selectedCategory === '한식') {
+         iframe.src = '/map/kor';
+       } else if (selectedCategory === '중식') {
+         iframe.src = '/map/chi';
+       } else if (selectedCategory === '일식') {
+         iframe.src = '/map/jap';
+       } else if (selectedCategory === '양식') {
+         iframe.src = '/map/wes';
+       } else if (selectedCategory === '분식') {
+         iframe.src = '/map/bun';
+       } else if (selectedCategory === '카페') {
+         iframe.src = '/map/caf';
+       }
+     }
+   });
+             
+           </script>
+         </div>
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4e057011d891d7853bd599de7c1a962b&libraries=services"></script>
+<script>
+var placeOverlay = new kakao.maps.CustomOverlay({zIndex:1}), 
+    contentNode = document.createElement('div'), 
+    markers = [], 
+    currCategory = ''; 
+
+var mapContainer = document.getElementById('map'), // 지도 div
+    mapOption = { 
+        center: new kakao.maps.LatLng(36.498185699566285,  127.27377607912211 ), // 중심좌표 : 세종 호수 공원
+        level: 9
+    };  
+
+
+// 지도 생성 
+var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+// 지도타입 변경
+function setMapType(maptype) { 
+    var roadmapControl = document.getElementById('btnRoadmap');
+    var skyviewControl = document.getElementById('btnSkyview'); 
+    if (maptype === 'roadmap') {
+        map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);    
+        roadmapControl.className = 'selected_btn';
+        skyviewControl.className = 'btn';
+    } else {
+        map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);    
+        skyviewControl.className = 'selected_btn';
+        roadmapControl.className = 'btn';
+    }
+}
+
+// 지도 확대
+function zoomIn() {
+    map.setLevel(map.getLevel() - 1);
+}
+
+// 지도 축소 
+function zoomOut() {
+    map.setLevel(map.getLevel() + 1);
+}
+
+// geolocation으로 사용할 확인
+if (navigator.geolocation) {
+    
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+        
+        var lat = position.coords.latitude, // 위도
+            lon = position.coords.longitude; // 경도
+        
+        var locPosition = new kakao.maps.LatLng(lat, lon), 
+            message = '<div style="padding:2px;">현재 위치</div>'; 
+        
+        displayMarker(locPosition, message); 
+      });
+    
+    } else {   
+    var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),    
+        message = 'geolocation을 사용불가'        
+    displayMarker(locPosition, message);
+}
+
+    // 지도에 마커와 인포윈도우 표시
+function displayMarker(locPosition, message) {
+
+    // 마커 생성
+    var marker = new kakao.maps.Marker({  
+        map: map, 
+        position: locPosition
+
+    }); 
+
+    // 지도 중심좌표 접속위치로 변경
+    map.setCenter(locPosition);      
+}
+
+
+function displayMarker(locPosition, message) {
+
+    // 마커 생성
+    var marker = new kakao.maps.Marker({  
+        map: map, 
+        position: locPosition
+    }); 
+
+    var iwContent = message, 
+        iwRemoveable = true;
+    var infowindow = new kakao.maps.InfoWindow({
+        content : iwContent,
+        removable : iwRemoveable
+    });
+
+    // 인포윈도우 마커위에 표시
+    infowindow.open(map, marker);
+
+    // 지도 중심좌표 접속위치로 변경
+    map.setCenter(locPosition);      
+}
+
+
+
+
+
+//식당 마커 표시
+
+// 지도에 idle 이벤트 등록
+kakao.maps.event.addListener(map, 'idle', searchPlaces);
+
+// 커스텀 오버레이 컨텐츠를 설정합니다
+placeOverlay.setContent(contentNode);  
+
+// 카테고리 이벤트 등록
+addCategoryClickEvent();
+
+// 엘리먼트 핸들러 등록
+function addEventHandle(target, type, callback) {
+    if (target.addEventListener) {
+        target.addEventListener(type, callback);
+    } else {
+        target.attachEvent('on' + type, callback);
+    }
+}
+
+// 카테고리 검색 요청 함수
+function searchPlaces() {
+    if (!currCategory) {
+        return;
+    }
+    
+    // 커스텀 오버레이 숨김 
+    placeOverlay.setMap(null);
+
+    // 표시되고 있는 마케 제거
+    removeMarker();
+    
+    const data = fetch(`/map/json/?category=${currCategory}`);
+    data.then((res) => res.json()).then((res) => {
+        displayPlaces(res.features)
+    });
+}
+
+
+// 지도 마커 표출 함수
+function displayPlaces(places) {
+
+    var order = document.getElementById(currCategory).getAttribute('data-order');
+
+    for ( var i=0; i<places.length; i++ ) {
+
+        // 마커를 생성하고 지도에 표시합니다
+        var marker = addMarker(
+            new kakao.maps.LatLng(
+                places[i].geometry.coordinates[1], places[i].geometry.coordinates[0]
+            ), order
+        );
+
+        (function(marker, place) {
+            kakao.maps.event.addListener(marker, 'click', function() {
+                displayPlaceInfo(place);
+            });
+        })(marker, places[i]);
+    }
+}
+
+
+// 콜백
+function placesSearchCB(data, status, pagination) {
+    if (status === kakao.maps.services.Status.OK) {
+
+        displayPlaces(data);
+    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+    } else if (status === kakao.maps.services.Status.ERROR) {
+        
+    }
+}
+
+// 마커 새성 , 표시
+function addMarker(position, order) {
+    var imageSrc = '/static/icon1.png', 
+        imageSize = new kakao.maps.Size(27, 28),  
+        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize),
+            marker = new kakao.maps.Marker({
+            position: position, 
+            image: markerImage 
+        });
+
+    marker.setMap(map); // 지도 위에 마커를 표출
+    markers.push(marker);  // 배열에 생성된 마커 추가
+
+    return marker;
+}
+
+// 지도 위에 표시되고 있는 마커를 모두 제거합니다
+function removeMarker() {
+    for ( var i = 0; i < markers.length; i++ ) {
+        markers[i].setMap(null);
+    }   
+    markers = [];
+}
+
+
+// 각 카테고리 클릭 이벤트 등록
+function addCategoryClickEvent() {
+    var category = document.getElementById('category'),
+        children = category.children;
+
+    for (var i=0; i<children.length; i++) {
+        children[i].onclick = onClickCategory;
+    }
+}
+
+// 카테고리 클릭시 호출
+function onClickCategory() {
+    var id = this.id,
+        className = this.className;
+
+    placeOverlay.setMap(null);
+
+    if (className === 'on') {
+        currCategory = '';
+        changeCategoryClass();
+        removeMarker();
+    } else {
+        currCategory = id;
+        changeCategoryClass(this);
+        searchPlaces();
+    }
+}
+
+// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
+function changeCategoryClass(el) {
+    var category = document.getElementById('category'),
+        children = category.children,
+        i;
+
+    for ( i=0; i<children.length; i++ ) {
+        children[i].className = '';
+    }
+
+    if (el) {
+        el.className = 'on';
+    } 
+} 
+</script>
+</body>
+</html>
+
+{% endblock %}

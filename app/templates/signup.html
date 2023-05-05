@@ -1,0 +1,82 @@
+{% extends 'home.html' %}
+{% block content %}
+
+
+<form method="post" action="/signup/">
+  <div class="container text-center">
+      <h3>회원가입</h3>
+      <br><br>
+      {% if error_msg %}
+          <div class="alert alert-danger" role="alert" style="width: 400px; display: inline-block;">
+              {{ error_msg }}
+          </div>
+      {% endif %}
+      {% csrf_token %}
+      <div class="form-group">
+          <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+          <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Password" required>
+      </div>
+      <div class="form-group">
+          <input type="password" class="form-control" id="pwd_check" name="pwd_check" placeholder="Password_check" required>
+      </div>
+      <div class="form-group">
+          <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+      </div>
+      <br>
+      <button class="btn btn-primary btn-block" id="signup">Sign up</button>
+  </div>
+</form>
+
+<style>
+
+  label{
+    font-weight: lighter;
+  }
+
+  .form-group{
+    justify-content: center;
+  }
+
+  .form-control {
+    width: 400px;
+    display: inline-block;
+  }
+
+  .btn-block{
+    width: 200px;
+  }
+
+  .btn{
+    display: inline;
+    background-color: gray;
+    border-color: gray;
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    border-width: 0px;
+    margin-top: 20px;
+  }
+
+  .btn:hover{
+    background-color: darkgray;
+    border-color: darkgray;
+  }
+
+  .btn:active,
+  .btn:focus{
+    background-color: darkgray !important;
+    border-color: darkgray !important;
+    outline: none !important;
+  }
+
+
+  .container{
+    margin-top: 150px;
+  }
+
+</style>
+
+
+{% endblock %}

@@ -1,0 +1,14 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#category").change(function() {
+      const category = $(this).val();
+      $.ajax({
+        url: articleListUrl + "?category=" + category,
+        success: function(data) {
+          $("tbody").html(data);
+        }
+      });
+    });
+  });
+</script>

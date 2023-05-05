@@ -1,0 +1,91 @@
+{% extends 'home.html' %}
+{% block content %}
+
+<!doctype html>
+<html lang="en">
+
+    <style>
+      body{
+        background-color: #eee;
+      }
+
+      .box {
+        width: 100px;
+        height: 100px;
+        margin: auto;
+
+      }
+      
+      .parent {
+        background-color: white;
+        border: 2px solid grey;
+        border-radius: 10px;
+        padding: 10px;
+        padding-top: 40px;
+        width: 300px;
+        height: 350px;
+        text-size-adjust: 10p;
+        margin: 0 20px 20px 0;
+        text-align: center;
+      }
+      .parent p{
+        padding-top: 20px;
+        clear:both;
+        font-size: 13pt;
+      }
+
+      .parent h2{
+        padding-top: 20px;
+      }
+
+      .jumbotron {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 150px;
+      }
+
+
+      
+
+    </style>
+      
+    <body>
+   
+      <div class="jumbotron">
+          <div class="parent">
+            <img src="/static/효선.png" class="box" >
+              <h2 style="text-align: center;">김효선</h2>
+              <div>
+                <p>kakaotalk: hyoseon928 <br> email: kimhyosoen928@gmail.com </p>
+              </div>
+          </div>
+         
+         <div class="parent">
+          <img src="/static/경민.png" class="box" >
+            <h2 style="text-align: center;">이경민</h2>
+            <div>
+              <p>kakaotalk: leekm0303 <br> email: kyoung9703@naver.com</p>
+            </div>
+         </div>
+         <div class="parent">
+          <img src="/static/현주.png" class="box" >
+            <h2 style="text-align: center;">박현주</h2>
+            <div>
+              <p>kakaotalk: slojw32116 <br> email: slojw@naver.com </p>
+            </div>
+         </div>
+         <div class="parent">
+          <img src="/static/유림.png" class="box" >
+            <h2 style="text-align: center;">정유림</h2>
+            <div>
+              <p>kakaotalk: lylaur <br> email: urim4085@gmail.com </p>
+            </div>
+         </div>
+      </div>
+    </body>
+
+
+</html>
+
+{% endblock %}

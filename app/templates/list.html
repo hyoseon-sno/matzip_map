@@ -1,0 +1,114 @@
+{% extends 'home.html' %}
+{% block content %}
+
+<div class="jumbotron">
+  <div class="container text-center">
+    <div class="form-group">
+      <label for="category-select"></label>
+      <select class="form-control" id="category-select">
+        <option value="all">전체</option>
+        <option value="1">추천</option>
+        <option value="2">후기</option>
+      </select>
+    </div>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>카테고리</th>
+          <th>제목</th>
+          <th>작성자</th>
+        </tr>
+      </thead>
+      <tbody id="article-list">
+        {% for article in article_list %}
+        <tr no={{ article.id }}>
+          {% if article.category == '1' %}
+          <td>추천</td>
+          {% elif article.category == '2' %}
+          <td>후기</td>
+          {% endif %}
+          <td>{{ article.title }}</td>
+          <td>{{ article.user.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="text-center">
+      <button class="btn btn-primary center" onclick='location="/article/write/"'>
+        글쓰기
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const articleList = document.getElementById('article-list')
+  const categorySelect = document.getElementById('category-select')
+
+  categorySelect.addEventListener('change', (e) => {
+    const selectedCategory = e.target.value
+    for (let i = 0; i < articleList.rows.length; i++) {
+      const row = articleList.rows[i]
+      const category = row.cells[0].innerText
+      if (selectedCategory === 'all') {
+        row.style.display = ''
+      } else if (category === '추천' && selectedCategory === '1') {
+        row.style.display = ''
+      } else if (category === '후기' && selectedCategory === '2') {
+        row.style.display = ''
+      } else {
+        row.style.display = 'none'
+      }
+    }
+  })
+
+  const trs = document.querySelectorAll('tr')
+  for (const tr of trs) {
+    tr.addEventListener('click', (e) => {
+      const articleNo = e.currentTarget.getAttribute('no')
+      location = `/article/detail/${articleNo}/`
+    })
+  }
+</script>
+
+<style>
+  .jumbotron {
+    background-color:white;
+    margin-top: 50px;
+    margin-bottom: 80px;
+  }
+  .center {
+    text-align: center;
+  }
+
+  th {
+    text-align: center;
+    pointer-events: none;
+  }
+  .form-control {
+    width: 10%
+  }
+
+  .btn-primary {
+    color: white;
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    border-width: 0px;
+    float: right;
+    background-color: gray;
+  }
+
+  .btn-primary:hover {
+    background-color: darkgray;
+  }
+
+  .btn-primary:active,
+  .btn-primary:focus {
+    background-color: darkgray !important;
+    outline: none !important;
+  }
+
+</style>
+
+{% endblock %}

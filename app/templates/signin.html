@@ -1,0 +1,78 @@
+{% extends 'home.html' %}
+{% block content %}
+
+<body>
+  <div class="container text-center">
+    <form method="post" action="/signin/">
+      <h3>로그인</h3>
+      <br><br>
+      {% if error_msg %}
+        <div class="alert alert-danger" role="alert" style="width: 400px; display: inline-block;">
+            {{ error_msg }}
+        </div>
+      {% endif %}      
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="email"></label>
+        <input type="text" class="form-control" id="email" name="email" placeholder="Emall">
+      </div>
+      <div class="form-group">
+        <label for="pwd"></label>
+        <input type="password" class="form-control" id="pwd" name="pwd" placeholder="Password">
+      </div>
+      <button id="signin">Sign in</button>
+      <button type='button' onclick='location="/signup/"'>Sign up</button>
+    </form>
+  </div>
+</body>
+
+
+
+<style>
+
+  #signin {
+    background-color: gray;
+  }
+  #signin:hover {
+    background-color: lightgray;
+  }
+
+  button {
+    color: white;
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    border-width: 0px;
+    margin-right: 10px;
+    margin-left: 10px;
+    background-color: darkgray;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: lightgray;
+    cursor: pointer;
+  }
+
+  body{
+    background-color: #eee;
+  }
+
+  .container{
+    margin-top: 150px;
+  }
+
+  #pwd.form-control{
+    margin-bottom: 40px;
+  }
+
+  .form-control{
+    width: 400px;
+    display: inline;
+  }
+
+</style>
+
+
+{% endblock %}
+

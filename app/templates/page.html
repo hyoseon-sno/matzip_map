@@ -1,0 +1,47 @@
+{% extends 'home.html' %}
+
+{% block content %}
+
+<style>
+    .game{
+        width: 1300px;
+        height: 600px;
+        user-select: none;
+        -webkit-user-drag: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    html{
+        background-color:#eee;
+    
+    }
+</style>
+
+
+<body>
+    <div class="jumbotron">
+      <br>
+      <div style="text-align: center;">
+        <br><br>
+        <img src="/static/닌텐도.webp" alt="닌텐도" class="game" usemap="#nintendo-map">
+        <map name="nintendo-map">
+          <area shape="rect" coords="550,450,750,500" id="nintendo-link">
+        </map>
+      </div>
+    </div>
+    <script>
+      document.getElementById("nintendo-link").addEventListener("click", function(event) {
+        event.preventDefault();  // 기본 동작 취소
+  
+        if ("{{ request.session.email|default_if_none:'' }}") {  // 로그인되어 있으면
+          window.location.href = '/main/';  // main 페이지로 이동
+        } else {  // 로그인되어 있지 않으면
+          window.location.href = '/signin/';  // 로그인 페이지로 이동
+        }
+      });
+    </script>
+  </body>
+
+{% endblock %}
